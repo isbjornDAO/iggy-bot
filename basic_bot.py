@@ -38,5 +38,4 @@ async def on_message(message):
 async def info(ctx):
     await ctx.send('This bot is dedicated to discussing and promoting polar bear conservation. Feel free to ask any questions or share information!')
 
-# Replace 'YOUR_BOT_TOKEN' with your actual bot token
-bot.run('YOUR_DISCORD_TOKEN')
+bot.run('DISCORD_TOKEN')
