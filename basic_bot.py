@@ -1,11 +1,6 @@
-import json
-import os
 import discord
-from discord.ext import commands, tasks
-import random
-import asyncio
-from datetime import datetime, timedelta
-from keep_alive import keep_alive
+from discord.ext import commands
+import os
 
 description = '''Isbjorn Support Bot'''
 
@@ -22,7 +17,7 @@ async def on_ready():
 async def on_member_join(member):
     welcome_channel = discord.utils.get(member.guild.text_channels, name='welcome')
     if welcome_channel:
-        await welcome_channel.send(f'Welcome {member.mention}!')
+        await welcome_channel.send(f'Welcome to the server, {member.mention}! We are glad to have you here. Feel free to ask any questions about polar bear conservation.')
 
 @bot.event
 async def on_message(message):
@@ -38,4 +33,5 @@ async def on_message(message):
 async def info(ctx):
     await ctx.send('This bot is dedicated to discussing and promoting polar bear conservation. Feel free to ask any questions or share information!')
 
+# Get the token from the environment variable
 bot.run(os.getenv("DISCORD_TOKEN"))
