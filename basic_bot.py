@@ -34,4 +34,4 @@ async def info(ctx):
     await ctx.send('This bot is dedicated to discussing and promoting polar bear conservation. Feel free to ask any questions or share information!')
 
 # Get the token from the environment variable
-bot.run(os.getenv("DISCORD_TOKEN"))
+bot.run(os.getenv('DISCORD_TOKEN'))
