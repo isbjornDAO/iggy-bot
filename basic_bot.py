@@ -28,6 +28,20 @@ trivia_questions = [
     }
 ]
 
+polar_bear_facts = [
+    "Polar bears are classified as marine mammals because they spend most of their lives on the sea ice of the Arctic Ocean.",
+    "Polar bears primarily eat seals, which they hunt from the edge of sea ice.",
+    "Polar bears have black skin under their white fur to better absorb the sun's rays.",
+    "Polar bears can swim for days at a time to get from one piece of ice to another."
+]
+
+avax_facts = [
+    "Avalanche (AVAX) is a decentralized, open-source blockchain with smart contract functionality.",
+    "Avalanche aims to provide a scalable blockchain solution while maintaining decentralization and security.",
+    "The AVAX token is used for staking, paying transaction fees, and participating in governance on the Avalanche network.",
+    "Avalanche supports the creation of custom blockchains and decentralized applications (dApps)."
+]
+
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
@@ -36,7 +50,7 @@ async def on_ready():
 async def on_member_join(member):
     welcome_channel = discord.utils.get(member.guild.text_channels, name='welcome')
     if welcome_channel:
-        await welcome_channel.send(f'Welcome to the server, {member.mention}! We are glad to have you here. Feel free to ask any questions about polar bear conservation.')
+        await welcome_channel.send(f'Welcome to the server, {member.mention}! We are glad to have you here. Feel free to ask any questions about polar bear conservation or the AVAX blockchain.')
 
 @bot.event
 async def on_message(message):
@@ -44,13 +58,18 @@ async def on_message(message):
         return
 
     if 'polar bear' in message.content.lower():
-        await message.channel.send('Polar bears are fascinating creatures! Did you know that they are classified as marine mammals because they spend most of their lives on the sea ice of the Arctic Ocean?')
+        fact = random.choice(polar_bear_facts)
+        await message.channel.send(f'Polar Bear Fact: {fact}')
+
+    if 'avax' in message.content.lower() or 'avalanche' in message.content.lower():
+        fact = random.choice(avax_facts)
+        await message.channel.send(f'AVAX Fact: {fact}')
 
     await bot.process_commands(message)
 
 @bot.command()
 async def info(ctx):
-    await ctx.send('This bot is dedicated to discussing and promoting polar bear conservation. Feel free to ask any questions or share information!')
+    await ctx.send('This bot is dedicated to discussing and promoting polar bear conservation and educating about the AVAX blockchain. Feel free to ask any questions or share information!')
 
 @bot.command()
 async def trivia(ctx):
