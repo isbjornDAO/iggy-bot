@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import os
 import random
+import asyncio
 
 description = '''Isbjorn Support Bot'''
 
@@ -25,6 +26,21 @@ trivia_questions = [
         "question": "Where do polar bears primarily live?",
         "options": ["Antarctica", "Arctic", "Greenland", "Siberia"],
         "answer": "Arctic"
+    },
+    {
+        "question": "What color is a polar bear's skin?",
+        "options": ["White", "Black", "Brown", "Pink"],
+        "answer": "Black"
+    },
+    {
+        "question": "How long can polar bears swim continuously?",
+        "options": ["Several hours", "One day", "Several days", "One week"],
+        "answer": "Several days"
+    },
+    {
+        "question": "What is the scientific name for the polar bear?",
+        "options": ["Ursus arctos", "Ursus maritimus", "Ursus americanus", "Ursus thibetanus"],
+        "answer": "Ursus maritimus"
     }
 ]
 
