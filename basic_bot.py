@@ -112,3 +112,5 @@ token = os.getenv("DISCORD_TOKEN")
 if token is None:
     raise ValueError("No DISCORD_TOKEN found in environment variables.")
 bot.run(token)
+
+#add category
