@@ -58,6 +58,8 @@ avax_facts = [
     "Avalanche supports the creation of custom blockchains and decentralized applications (dApps)."
 ]
 
+user_data = {}
+
 @bot.event
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
@@ -109,23 +111,59 @@ async def trivia(ctx):
 
 @bot.command()
 async def explore(ctx):
-    await ctx.send('You are now exploring the Arctic! Type `!find` to look for interesting things.')
+    user_id = ctx.author.id
+    if user_id not in user_data:
+        user_data[user_id] = {"points": 0, "achievements": [], "items": []}
+    await ctx.send('You are now exploring the Arctic! Type `!walk` to move around and `!look` to find interesting things.')
 
 @bot.command()
-async def find(ctx):
+async def walk(ctx):
+    user_id = ctx.author.id
+    if user_id not in user_data:
+        return await ctx.send('You need to start exploring first by typing `!explore`.')
+    
+    events = [
+        "You walked for a while and found a beautiful ice cave.",
+        "You walked and saw a group of seals resting on the ice.",
+        "You walked and encountered a snowstorm. Be careful!",
+        "You walked and found a hidden polar bear den."
+    ]
+    event = random.choice(events)
+    await ctx.send(event)
+
+@bot.command()
+async def look(ctx):
+    user_id = ctx.author.id
+    if user_id not in user_data:
+        return await ctx.send('You need to start exploring first by typing `!explore`.')
+    
     findings = [
-        "You found a polar bear! Type `!fact` to learn something new about polar bears.",
-        "You found a seal! Polar bears love to eat seals.",
-        "You found some sea ice. Polar bears use sea ice to hunt for seals.",
-        "You found a snowstorm! Be careful out there."
+        {"message": "You found a polar bear! Type `!fact` to learn something new about polar bears.", "points": 10, "item": "Polar Bear Encounter"},
+        {"message": "You found a seal! Polar bears love to eat seals.", "points": 5, "item": "Seal Encounter"},
+        {"message": "You found some sea ice. Polar bears use sea ice to hunt for seals.", "points": 3, "item": "Sea Ice"},
+        {"message": "You found a snowstorm! Be careful out there.", "points": 2, "item": "Snowstorm Encounter"},
+        {"message": "You found a rare Arctic flower!", "points": 15, "item": "Arctic Flower"},
+        {"message": "You found an ancient artifact buried in the ice!", "points": 20, "item": "Ancient Artifact"}
     ]
     finding = random.choice(findings)
-    await ctx.send(finding)
+    user_data[user_id]["points"] += finding["points"]
+    user_data[user_id]["items"].append(finding["item"])
+    await ctx.send(f'{finding["message"]} You earned {finding["points"]} points!')
 
 @bot.command()
 async def fact(ctx):
     fact = random.choice(polar_bear_facts)
     await ctx.send(f'Polar Bear Fact: {fact}')
+
+@bot.command()
+async def status(ctx):
+    user_id = ctx.author.id
+    if user_id not in user_data:
+        return await ctx.send('You need to start exploring first by typing `!explore`.')
+    
+    points = user_data[user_id]["points"]
+    items = ", ".join(user_data[user_id]["items"])
+    await ctx.send(f'You have {points} points and the following items: {items}')
 
 # Get the token from the environment variable
 token = os.getenv("DISCORD_TOKEN")
