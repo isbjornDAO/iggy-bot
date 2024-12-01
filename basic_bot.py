@@ -107,10 +107,28 @@ async def trivia(ctx):
     else:
         await ctx.send(f'Sorry, that\'s incorrect. The correct answer is {question["answer"]}.')
 
+@bot.command()
+async def explore(ctx):
+    await ctx.send('You are now exploring the Arctic! Type `!find` to look for interesting things.')
+
+@bot.command()
+async def find(ctx):
+    findings = [
+        "You found a polar bear! Type `!fact` to learn something new about polar bears.",
+        "You found a seal! Polar bears love to eat seals.",
+        "You found some sea ice. Polar bears use sea ice to hunt for seals.",
+        "You found a snowstorm! Be careful out there."
+    ]
+    finding = random.choice(findings)
+    await ctx.send(finding)
+
+@bot.command()
+async def fact(ctx):
+    fact = random.choice(polar_bear_facts)
+    await ctx.send(f'Polar Bear Fact: {fact}')
+
 # Get the token from the environment variable
 token = os.getenv("DISCORD_TOKEN")
 if token is None:
     raise ValueError("No DISCORD_TOKEN found in environment variables.")
 bot.run(token)
-
-#add category
