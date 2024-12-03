@@ -3,6 +3,7 @@ from discord.ext import commands
 import os
 import random
 import asyncio
+from pymongo import MongoClient
 
 description = '''Isbjorn Support Bot'''
 
@@ -10,6 +11,11 @@ intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', description=description, intents=intents)
+
+# MongoDB setup
+mongo_client = MongoClient(os.getenv("MONGODB_URI"))
+db = mongo_client['discord_bot']
+user_collection = db['users']
 
 trivia_questions = [
     {
@@ -42,20 +48,6 @@ trivia_questions = [
         "options": ["Ursus arctos", "Ursus maritimus", "Ursus americanus", "Ursus thibetanus"],
         "answer": "Ursus maritimus"
     }
-]
-
-polar_bear_facts = [
-    "Polar bears are classified as marine mammals because they spend most of their lives on the sea ice of the Arctic Ocean.",
-    "Polar bears primarily eat seals, which they hunt from the edge of sea ice.",
-    "Polar bears have black skin under their white fur to better absorb the sun's rays.",
-    "Polar bears can swim for days at a time to get from one piece of ice to another."
-]
-
-avax_facts = [
-    "Avalanche (AVAX) is a decentralized, open-source blockchain with smart contract functionality.",
-    "Avalanche aims to provide a scalable blockchain solution while maintaining decentralization and security.",
-    "The AVAX token is used for staking, paying transaction fees, and participating in governance on the Avalanche network.",
-    "Avalanche supports the creation of custom blockchains and decentralized applications (dApps)."
 ]
 
 user_data = {}
