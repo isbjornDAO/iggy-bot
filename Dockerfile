@@ -16,5 +16,8 @@ RUN python -m venv --copies /opt/venv && \
 # Make sure the virtual environment is activated
 ENV PATH="/opt/venv/bin:$PATH"
 
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
 # Run the bot
 CMD ["python", "basic_bot.py"]
