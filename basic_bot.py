@@ -112,23 +112,29 @@ async def explore(ctx):
 async def walk(ctx):
     user_id = ctx.author.id
     if user_id not in user_data:
-        return await ctx.send('You need to start exploring first by typing `!explore`.')
-    
-    events = [
-        "You walked for a while and found a beautiful ice cave.",
-        "You walked and saw a group of seals resting on the ice.",
-        "You walked and encountered a snowstorm. Be careful!",
-        "You walked and found a hidden polar bear den."
-    ]
-    event = random.choice(events)
-    await ctx.send(event)
+        user_data[user_id] = {"points": 0, "items": [], "last_action": datetime.min}
+
+    now = datetime.now()
+    if now - user_data[user_id]["last_action"] < timeout_duration:
+        return await ctx.send('You need to wait before you can walk again.')
+
+    user_data[user_id]["last_action"] = now
+    points = random.randint(1, 5)
+    user_data[user_id]["points"] += points
+    await ctx.send(f'You went for a walk and earned {points} points!')
 
 @bot.command()
 async def look(ctx):
     user_id = ctx.author.id
     if user_id not in user_data:
         return await ctx.send('You need to start exploring first by typing `!explore`.')
-    
+
+    now = datetime.now()
+    if now - user_data[user_id]["last_action"] < timeout_duration:
+        return await ctx.send('You need to wait before you can look again.')
+
+    user_data[user_id]["last_action"] = now
+
     findings = [
         {"message": "You found a polar bear! Type `!fact` to learn something new about polar bears.", "points": 10, "item": "Polar Bear Encounter"},
         {"message": "You found a seal! Polar bears love to eat seals.", "points": 5, "item": "Seal Encounter"},
@@ -141,7 +147,7 @@ async def look(ctx):
     user_data[user_id]["points"] += finding["points"]
     user_data[user_id]["items"].append(finding["item"])
     await ctx.send(f'{finding["message"]} You earned {finding["points"]} points!')
-
+    
 @bot.command()
 async def fact(ctx):
     fact = random.choice(polar_bear_facts)
