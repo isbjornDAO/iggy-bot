@@ -1,9 +1,10 @@
+import asyncio
+import random
+import os
+from datetime import datetime, timedelta
+from pymongo import MongoClient
 import discord
 from discord.ext import commands
-import os
-import random
-import asyncio
-from pymongo import MongoClient
 
 description = '''Isbjorn Support Bot'''
 
@@ -51,6 +52,7 @@ trivia_questions = [
 ]
 
 user_data = {}
+timeout_duration = timedelta(minutes=10)  # Set the timeout duration
 
 @bot.event
 async def on_ready():
@@ -80,33 +82,6 @@ async def on_message(message):
 @bot.command()
 async def info(ctx):
     await ctx.send('This bot is dedicated to discussing and promoting polar bear conservation and educating about the AVAX blockchain. Feel free to ask any questions or share information!')
-
-@bot.command()
-async def trivia(ctx):
-    question = random.choice(trivia_questions)
-    options = "\n".join([f"{i+1}. {option}" for i, option in enumerate(question["options"])])
-    await ctx.send(f"{question['question']}\n{options}")
-
-    def check(m):
-        return m.author == ctx.author and m.channel == ctx.channel and m.content.isdigit()
-
-    try:
-        msg = await bot.wait_for('message', check=check, timeout=30.0)
-    except asyncio.TimeoutError:
-        return await ctx.send('Sorry, you took too long to answer!')
-
-    answer_index = int(msg.content) - 1
-    if question["options"][answer_index] == question["answer"]:
-        await ctx.send('Correct! Well done!')
-    else:
-        await ctx.send(f'Sorry, that\'s incorrect. The correct answer is {question["answer"]}.')
-
-@bot.command()
-async def explore(ctx):
-    user_id = ctx.author.id
-    if user_id not in user_data:
-        user_data[user_id] = {"points": 0, "achievements": [], "items": []}
-    await ctx.send('You are now exploring the Arctic! Type `!walk` to move around and `!look` to find interesting things.')
 
 @bot.command()
 async def walk(ctx):
@@ -147,24 +122,9 @@ async def look(ctx):
     user_data[user_id]["points"] += finding["points"]
     user_data[user_id]["items"].append(finding["item"])
     await ctx.send(f'{finding["message"]} You earned {finding["points"]} points!')
-    
-@bot.command()
-async def fact(ctx):
-    fact = random.choice(polar_bear_facts)
-    await ctx.send(f'Polar Bear Fact: {fact}')
-
-@bot.command()
-async def status(ctx):
-    user_id = ctx.author.id
-    if user_id not in user_data:
-        return await ctx.send('You need to start exploring first by typing `!explore`.')
-    
-    points = user_data[user_id]["points"]
-    items = ", ".join(user_data[user_id]["items"])
-    await ctx.send(f'You have {points} points and the following items: {items}')
 
 # Get the token from the environment variable
 token = os.getenv("DISCORD_TOKEN")
 if token is None:
     raise ValueError("No DISCORD_TOKEN found in environment variables.")
-bot.run(token)#hi
+bot.run(token)
