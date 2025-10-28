@@ -11,6 +11,7 @@ description = '''Isbjorn Support Bot'''
 intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
+intents.guild_scheduled_events = True  # Enable reading scheduled events
 bot = commands.Bot(command_prefix='!', description=description, intents=intents)
 
 # MongoDB setup
@@ -51,7 +52,15 @@ timeout_duration = timedelta(minutes=10)  # Set the timeout duration
 
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user.name}')
+    print(f'\n✅ Bot is ONLINE!')
+    print(f'🤖 Logged in as: {bot.user.name} (ID: {bot.user.id})')
+    print(f'🏠 Connected to {len(bot.guilds)} servers:')
+    for guild in bot.guilds:
+        print(f'  - {guild.name} (ID: {guild.id})')
+        # Count scheduled events
+        events = guild.scheduled_events
+        print(f'    📅 Scheduled events: {len(events)}')
+    print('\n👀 Bot is ready and watching for scheduled events!\n')
 
 @bot.event
 async def on_member_join(member):
